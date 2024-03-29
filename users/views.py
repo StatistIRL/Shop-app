@@ -19,9 +19,11 @@ def login(request):
             if user:
                 auth.login(request, user)
                 messages.success(request, f"{username}, Вы успешно вошли в аккаунт")
+                redirect_page = request.POST.get("next", False)
 
-                if request.POST.get("next", False):
-                    return HttpResponseRedirect(request.POST.get("next"))
+                if redirect_page and redirect_page != reverse("user:logout"):
+                    return HttpResponseRedirect(redirect_page)
+
                 return HttpResponseRedirect(reverse("main:index"))
 
     else:
